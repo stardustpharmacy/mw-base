@@ -1,11 +1,11 @@
-#include <sys/socket.h>
-#include <arpa/inet.h>
+#include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
-#include <bot/networking/client.h>
 #include <bot/macros.h>
+#include <bot/networking/client.h>
 
 int bot_client_init(client_t *client, const char *name) {
     if (client == NULL)

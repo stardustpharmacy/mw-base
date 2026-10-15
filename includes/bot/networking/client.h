@@ -2,7 +2,6 @@
 #define BOT_CLIENT_H
 
 #include <time.h>
-
 #include <bot/networking/protocol.h>
 
 typedef struct {

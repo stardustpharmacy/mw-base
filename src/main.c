@@ -1,10 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
-#include <bot/macros.h>
-
 #include <sys/socket.h>
 
-#include "bot/networking/client.h"
+#include <bot/macros.h>
+#include <bot/networking/client.h>
 
 int main(int argc, char *argv[]) {
     BOT_PRINTLN("eee");
