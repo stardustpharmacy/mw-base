@@ -1,0 +1,9 @@
+#ifndef BOT_PROTOCOL_H
+#define BOT_PROTOCOL_H
+
+typedef enum {
+    BOT_PROTOCOL_OPCODE_HEARTBEAT = 0,
+    BOT_PROTOCOL_OPCODE_SUICIDE = 1,
+} opcode;
+
+#endif //BOT_PROTOCOL_H
