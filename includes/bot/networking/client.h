@@ -9,6 +9,11 @@ typedef struct {
     int fd;
     char name[33]; /* 32 + null term */
     time_t last_recv; /* last msg received (> BOT_RECV_TIMEOUT, disconnect) */
+
+    enum {
+        BOT_CLIENT_STATE_PENDING = 0,
+        BOT_CLIENT_STATE_KEX = 1,
+    } state;
 } client_t;
 
 int bot_client_init(client_t *client, const char *name);
