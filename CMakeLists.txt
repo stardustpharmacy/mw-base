@@ -19,9 +19,7 @@ set(INC_DIR includes)
 include_directories(${INC_DIR})
 file(GLOB_RECURSE SRC_FILES "${SRC_DIR}/*.c")
 file(GLOB_RECURSE HDR_FILES "${INC_DIR}/*.h")
-add_executable(bot ${SRC_FILES} ${HDR_FILES}
-        src/main.c
-        includes/bot/macros.h)
+add_executable(bot ${SRC_FILES} ${HDR_FILES})
 
 # eee
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
