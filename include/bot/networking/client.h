@@ -1,6 +1,7 @@
 #ifndef BOT_CLIENT_H
 #define BOT_CLIENT_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <time.h>
 #include <bot/networking/protocol.h>
@@ -15,15 +16,22 @@ typedef enum bot_client_state {
 typedef struct bot_client {
     int fd;
     char name[BOT_CLIENT_NAME_MAX + 1]; /* 32 + null term */
+
     time_t last_recv_time; /* last msg received (> BOT_CLIENT_RECV_TIMEOUT_S, disconnect) */
     bot_client_state state;
+
+    short int poll_events;
 } bot_client;
 
 int bot_client_init(bot_client *client, const char *name);
 
 int bot_client_connect(bot_client *client);
 
-int bot_client_disconnect(bot_client *client);
+int bot_client_disconnect(bot_client *client, bool do_sleep);
+
+int bot_client_events(bot_client *client, short int events);
+
+int bot_client_tick(bot_client *client);
 
 // TODO: implement a msg pack format
 int bot_client_write(bot_client *client, bot_opcode opcode, const void *buf, size_t len);

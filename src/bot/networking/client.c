@@ -1,3 +1,4 @@
+#include <poll.h>
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
@@ -13,10 +14,34 @@ int bot_client_init(bot_client *client, const char *name) {
 
     client->state = BOT_CLIENT_STATE_PENDING;
     client->last_recv_time = 0;
+    client->poll_events = POLLOUT;
     client->fd = -1;
 
     memset(client->name, 0, sizeof(client->name));
     if (name) strncpy(client->name, name, sizeof(client->name) - 1);
+
+    return 0;
+}
+
+int bot_client_disconnect(bot_client *client, bool do_sleep) {
+    if (client == NULL)
+        return -1;
+
+    // duplicated code? yeah kinda rn, do i care? not rly.
+    // this will carry other logic l8r on anyway.
+
+    if (client->fd != -1) {
+        close(client->fd);
+        client->fd = -1;
+    }
+
+    client->last_recv_time = 0;
+    client->state = BOT_CLIENT_STATE_PENDING;
+    client->poll_events = POLLOUT;
+
+    if (do_sleep) {
+        sleep(5);
+    }
 
     return 0;
 }
@@ -42,30 +67,39 @@ int bot_client_connect(bot_client *client) {
     const int ret = connect(client->fd, (struct sockaddr *) &addr, sizeof(struct sockaddr_in));
     if (ret == -1 && errno != EINPROGRESS) {
         BOT_ERROR("initializing connection failed");
-        bot_client_disconnect(client);
         return -1;
     }
 
     // wtv
     client->last_recv_time = time(NULL);
+    client->poll_events = POLLOUT;
 
     return 0;
 }
 
-int bot_client_disconnect(bot_client *client) {
-    if (client == NULL)
+int bot_client_tick(bot_client *client) {
+    if (time(NULL) - client->last_recv_time > BOT_CLIENT_RECV_TIMEOUT_S) {
+        BOT_PRINTLN("connection timed out");
         return -1;
-
-    // duplicated code? yeah kinda rn, do i care? not rly.
-    // this will carry other logic l8r on anyway.
-
-    if (client->fd != -1) {
-        close(client->fd);
-        client->fd = -1;
     }
 
-    client->last_recv_time = 0;
-    client->state = BOT_CLIENT_STATE_PENDING;
+    return 0;
+}
+
+int bot_client_events(bot_client *client, const short int events) {
+    if (client->state == BOT_CLIENT_STATE_PENDING && (events & POLLOUT)) {
+        int err;
+        socklen_t err_len = sizeof(err);
+
+        if (getsockopt(client->fd, SOL_SOCKET, SO_ERROR, &err, &err_len) < 0 || err != 0) {
+            BOT_PRINTLN("connection failed: %s", strerror(err));
+            return -1;
+        }
+
+        client->poll_events = POLLIN;
+        BOT_PRINTLN("connected");
+        return 0;
+    }
 
     return 0;
 }
