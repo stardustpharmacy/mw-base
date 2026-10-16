@@ -11,16 +11,16 @@
 
 #define BOT_PRINTLN(fmt, ...) BOT_PRINT(fmt "\n", ##__VA_ARGS__)
 
-#define BOT_PERROR(...) do { \
-    int s = errno; \
+#define BOT_ERROR(...) do { \
+    int err_ = errno; \
     BOT_PRINT(__VA_ARGS__); \
-    printf(": %s\n", strerror(s)); \
+    printf(": %s\n", strerror(err_)); \
 } while(0);
 
 #else
 #define BOT_PRINT(...) do {} while(0);
 #define BOT_PRINTLN(...) do {} while(0);
-#define BOT_PERROR(...) do {} while(0);
+#define BOT_ERROR(...) do {} while(0);
 #endif
 
 #endif //BOT_MACROS_H

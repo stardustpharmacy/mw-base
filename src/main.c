@@ -6,14 +6,11 @@
 #include <bot/networking/client.h>
 
 int main(int argc, char *argv[]) {
-    BOT_PRINTLN("eee");
-    socket(-1, -1, 0);
-    BOT_PERROR("socket creation");
 
-    client_t client = {0};
+    bot_client client = {0};
     int ret = bot_client_init(&client, NULL /* TODO: get name from argv[1] */);
     if (ret < 0) {
-        BOT_PERROR("Initializing client failed");
+        BOT_ERROR("Initializing client failed");
         return EXIT_FAILURE;
     }
 

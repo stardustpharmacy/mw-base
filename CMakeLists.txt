@@ -14,7 +14,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--gc-sections")
 
 # src & inc dirs
 set(SRC_DIR src)
-set(INC_DIR includes)
+set(INC_DIR include)
 
 include_directories(${INC_DIR})
 file(GLOB_RECURSE SRC_FILES "${SRC_DIR}/*.c")
