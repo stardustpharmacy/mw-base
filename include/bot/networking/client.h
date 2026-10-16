@@ -15,7 +15,7 @@ typedef enum bot_client_state {
 typedef struct bot_client {
     int fd;
     char name[BOT_CLIENT_NAME_MAX + 1]; /* 32 + null term */
-    time_t last_recv_time; /* last msg received (> BOT_RECV_TIMEOUT_S, disconnect) */
+    time_t last_recv_time; /* last msg received (> BOT_CLIENT_RECV_TIMEOUT_S, disconnect) */
     bot_client_state state;
 } bot_client;
 
